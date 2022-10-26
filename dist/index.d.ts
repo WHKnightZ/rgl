@@ -418,3 +418,4 @@ declare namespace ReactGridLayout {
 }
 
 export as namespace ReactGridLayout;
+export = ReactGridLayout

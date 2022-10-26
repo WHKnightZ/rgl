@@ -4,19 +4,13 @@ import { useEffect, useState } from "react";
 import GridLayout from "./ReactGridLayout";
 import WidthProvider from "./components/WidthProvider";
 
-import './index.css'
+import "./index.css";
 import "./styles.css";
 
 const ReactGridLayout = WidthProvider(GridLayout);
 
 const data = [
-  {
-    i: "1",
-    h: 18,
-    w: 6,
-    x: 0,
-    y: 0,
-  },
+  { i: "1", h: 18, w: 6, x: 0, y: 0 },
   { i: "2", h: 20, w: 6, x: 0, y: 18 },
   { i: "3", h: 18, w: 3, x: 9, y: 0 },
   { i: "4", h: 18, w: 3, x: 6, y: 0 },
@@ -26,11 +20,15 @@ const data = [
   { i: "8", h: 18, w: 3, x: 12, y: 0 },
 ];
 
+const margin = 7;
+const maxCols = 24;
+const maxRows = 60;
+
 const App = () => {
   const [rowHeight, setRowHeight] = useState(50);
 
   const handleResize = () => {
-    setRowHeight((document.documentElement.clientHeight - 7) / 60 - 7);
+    setRowHeight((document.documentElement.clientHeight - margin) / maxRows - margin);
   };
 
   useEffect(() => {
@@ -44,20 +42,23 @@ const App = () => {
   }, []);
 
   return (
-    <div style={{ height: "100vh" }}>
-      <ReactGridLayout
-        layout={data}
-        margin={[7, 7]}
-        cols={24}
-        rowHeight={rowHeight}
-        compactType={"vertical"}
-        maxRows={60}
-      >
-        {data.map(({ i }: any) => {
-          return <div key={i}></div>;
-        })}
-      </ReactGridLayout>
-    </div>
+    <ReactGridLayout
+      layout={data}
+      margin={[margin, margin]}
+      cols={maxCols}
+      rowHeight={rowHeight}
+      compactType="vertical"
+      maxRows={maxRows}
+      resizeHandles={['nw', 'ne', 'se', 'sw']}
+    >
+      {data.map(({ i }: any) => {
+        return (
+          <div key={i}>
+            <div style={{ padding: 10 }}>Element: {i + 1}</div>
+          </div>
+        );
+      })}
+    </ReactGridLayout>
   );
 };
 
