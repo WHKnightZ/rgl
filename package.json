@@ -1,7 +1,11 @@
 {
-  "name": "rgl",
+  "name": "@whknightz/rgl",
   "version": "0.1.0",
-  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "clsx": "^1.1.1",
     "lodash.isequal": "^4.5.0",
