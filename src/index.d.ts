@@ -416,3 +416,6 @@ declare namespace ReactGridLayout {
     component: React.ComponentClass<P> | React.FunctionComponent<P>
   ): React.ComponentClass<P & WidthProviderProps>;
 }
+
+export as namespace ReactGridLayout;
+export = ReactGridLayout
