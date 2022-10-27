@@ -7,10 +7,17 @@ Cannot resize, drag drop if has element overflow the maxRows
 
 `npm i @whknightz/rgl`
 
+# Demo
+
+`npm start`
+
 # Code
 
 ```js
 import { GridLayout } from "@whknightz/rgl";
+
+import '@whknightz/rgl/dist/styles.css';
+import 'react-resizable/css/styles.css';
 
 const data = [
   { i: "1", h: 18, w: 6, x: 0, y: 0 },
