@@ -1,6 +1,7 @@
 # RGL
 
 Refer to https://www.npmjs.com/package/react-grid-layout but add vertical bound
+
 Cannot resize, drag drop if has element overflow the maxRows
 
 # Install

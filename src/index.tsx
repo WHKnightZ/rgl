@@ -9,16 +9,24 @@ import "./styles.css";
 
 const ReactGridLayout = WidthProvider(GridLayout);
 
-const data = [
-  { i: "1", h: 18, w: 6, x: 0, y: 0 },
-  { i: "2", h: 20, w: 6, x: 0, y: 18 },
-  { i: "3", h: 18, w: 3, x: 9, y: 0 },
-  { i: "4", h: 18, w: 3, x: 6, y: 0 },
-  { i: "5", h: 18, w: 3, x: 15, y: 0 },
-  { i: "6", h: 20, w: 6, x: 6, y: 18 },
-  { i: "7", h: 18, w: 3, x: 18, y: 0 },
-  { i: "8", h: 18, w: 3, x: 12, y: 0 },
-];
+// const data = [
+//   { i: "1", h: 18, w: 6, x: 0, y: 0 },
+//   { i: "2", h: 20, w: 6, x: 0, y: 18 },
+//   { i: "3", h: 18, w: 3, x: 9, y: 0 },
+//   { i: "4", h: 18, w: 3, x: 6, y: 0 },
+//   { i: "5", h: 18, w: 3, x: 15, y: 0 },
+//   { i: "6", h: 20, w: 6, x: 6, y: 18 },
+//   { i: "7", h: 18, w: 3, x: 18, y: 0 },
+//   { i: "8", h: 18, w: 3, x: 12, y: 0 },
+// ];
+
+const data = Array.from({ length: 12 }).map((_, index) => ({
+  i: "" + index,
+  x: (index % 4) * 6,
+  y: Math.floor(index / 4) * 20,
+  w: 6,
+  h: 20,
+}));
 
 const margin = 7;
 const maxCols = 24;
@@ -49,7 +57,7 @@ const App = () => {
       rowHeight={rowHeight}
       compactType="vertical"
       maxRows={maxRows}
-      resizeHandles={['nw', 'ne', 'se', 'sw']}
+      resizeHandles={["nw", "ne", "se", "sw"]}
     >
       {data.map(({ i }: any) => {
         return (
