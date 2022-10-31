@@ -62,7 +62,7 @@ const App = () => {
       {data.map(({ i }: any) => {
         return (
           <div key={i}>
-            <div style={{ padding: 10 }}>Element: {i + 1}</div>
+            <div style={{ padding: 10 }}>Element: {i}</div>
           </div>
         );
       })}

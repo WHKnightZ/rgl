@@ -101,6 +101,7 @@ export default class ReactGridLayout extends React.Component {
 
   dragEnterCounter = 0;
   oldResizePlaceholder = null;
+  oldLayout = null;
 
   componentDidMount() {
     this.setState({ mounted: true });
@@ -225,7 +226,12 @@ export default class ReactGridLayout extends React.Component {
     let { layout } = this.state;
     const { cols, allowOverlap, preventCollision } = this.props;
     const l = getLayoutItem(layout, i);
+
     if (!l) return;
+
+    let newLayout = layout.map((i) => ({ ...i }));
+
+    this.oldLayout = this.canMove(newLayout) ? newLayout : this.oldLayout;
 
     // Create placeholder (display only)
     const placeholder = {
@@ -239,7 +245,6 @@ export default class ReactGridLayout extends React.Component {
 
     // Move the element to the dragged location.
     const isUserAction = true;
-    let newLayout = layout.map((i) => ({ ...i }));
 
     layout = moveElement(layout, l, x, y, isUserAction, preventCollision, compactType(this.props), cols, allowOverlap);
 
@@ -248,6 +253,10 @@ export default class ReactGridLayout extends React.Component {
     const newLayout2 = compact(layout, compactType(this.props), cols);
     if (this.canMove(newLayout2)) {
       newLayout = newLayout2;
+    }
+
+    if (!this.canMove(newLayout)) {
+      newLayout = this.oldLayout;
     }
 
     this.setState({
@@ -273,7 +282,10 @@ export default class ReactGridLayout extends React.Component {
     const l = getLayoutItem(layout, i);
     if (!l) return;
 
-    let layout1 = layout.map((i) => ({ ...i }));
+    let layout1;
+
+    if (!this.canMove(layout) && this.oldLayout) layout1 = this.oldLayout;
+    else layout1 = layout.map((i) => ({ ...i }));
 
     // Move the element here
     const isUserAction = true;
