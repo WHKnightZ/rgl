@@ -325,6 +325,7 @@ export default class ReactGridLayout extends React.Component {
     this.setState({
       oldResizeItem: cloneLayoutItem(l),
       oldLayout: this.state.layout,
+      tooltip: i,
     });
 
     this.props.onResizeStart(layout, l, l, null, e, node);
@@ -379,7 +380,7 @@ export default class ReactGridLayout extends React.Component {
       i: i,
     };
 
-    // this.props.onResize(newLayout, oldResizeItem, l, placeholder, e, node)
+    this.props.onResize(newLayout, oldResizeItem, l, placeholder, e, node);
 
     let layout2 = layout.map((i) => ({ ...i }));
 
@@ -414,7 +415,10 @@ export default class ReactGridLayout extends React.Component {
       layout: newLayout,
       oldResizeItem: null,
       oldLayout: null,
+      tooltip: null,
     });
+
+    console.log("x");
 
     this.onLayoutMaybeChanged(newLayout, oldLayout);
   };
@@ -528,7 +532,25 @@ export default class ReactGridLayout extends React.Component {
         resizeHandles={resizeHandlesOptions}
         resizeHandle={resizeHandle}
       >
-        {child}
+        <div
+          onMouseEnter={() => {
+            console.log("first");
+          }}
+          onMouseLeave={() => {
+            console.log("dsads");
+          }}
+        >
+          {child}
+          {this.state.tooltip === l.i && (
+            <div style={{ position: "absolute", right: 0, bottom: 0 }}>
+              <div
+                style={{ position: "absolute", left: 20, bottom: 100, backgroundColor: "red", whiteSpace: "nowrap" }}
+              >
+                {l.w} x {l.h}
+              </div>
+            </div>
+          )}
+        </div>
       </GridItem>
     );
   }
