@@ -483,6 +483,9 @@ export default class GridItem extends React.Component {
     const showTooltip = tooltip && ((isHovering && tooltip.showOnHover) || draggingId === i || resizingId === i);
 
     const pos = calcGridItemPosition(this.getPositionParams(), x, y, w, h, this.state);
+
+    const toTheRight = pos?.width < 120;
+
     const child = (
       <div style={{ position: "relative" }}>
         {tooltip && (
@@ -499,7 +502,8 @@ export default class GridItem extends React.Component {
             <div
               style={{
                 position: "absolute",
-                right: 10,
+                right: toTheRight ? undefined : 10,
+                left: toTheRight ? 10 : undefined,
                 whiteSpace: "nowrap",
                 transform: "translateY(-50%)",
                 top: "50%",

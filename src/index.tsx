@@ -61,7 +61,7 @@ const App = () => {
       tooltip={{
         showOnHover: true,
         render: ({ w, h }: any) => (
-          <div style={{ background: "#b0bec577", fontSize: 12, padding: "2px 4px", borderRadius: 4 }}>
+          <div style={{ background: "#eceff1", fontSize: 12, padding: "2px 4px", borderRadius: 4 }}>
             {w} x {h}
           </div>
         ),
