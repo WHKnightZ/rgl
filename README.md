@@ -1,8 +1,11 @@
 # RGL
 
-Refer to https://www.npmjs.com/package/react-grid-layout but add vertical bound
+Refer to https://www.npmjs.com/package/react-grid-layout
 
-Cannot resize, drag drop if has element overflow the maxRows
+Add some new features
+
+- Add vertical bound: cannot resize, drag drop if has an element overflow the maxRows
+- Add tooltip while resizing, dragging, hovering an element
 
 # Install
 
@@ -17,8 +20,8 @@ Cannot resize, drag drop if has element overflow the maxRows
 ```js
 import { GridLayout } from "@whknightz/rgl";
 
-import '@whknightz/rgl/dist/styles.css';
-import 'react-resizable/css/styles.css';
+import "@whknightz/rgl/dist/styles.css";
+import "react-resizable/css/styles.css";
 
 const data = [
   { i: "1", h: 18, w: 6, x: 0, y: 0 },
