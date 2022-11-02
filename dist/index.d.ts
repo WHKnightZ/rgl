@@ -80,14 +80,6 @@ declare namespace ReactGridLayout {
      * If true and draggable, item will be moved only within grid.
      */
     isBounded?: boolean | undefined;
-
-    /**
-     * Show a tooltip when hover, resize, drag to the right
-     */
-    tooltip?: {
-      showOnHover?: boolean;
-      render: (params: { x?: number; y?: number; w?: number; h?: number }) => React.ReactNode;
-    };
   }
 
   interface Layouts {
@@ -301,6 +293,14 @@ declare namespace ReactGridLayout {
      * You can use this instead of a regular ref and the deprecated `ReactDOM.findDOMNode()`` function.
      */
     innerRef?: React.Ref<HTMLDivElement>;
+
+    /**
+     * Show a tooltip when hover, resize, drag to the right
+     */
+    tooltip?: {
+      showOnHover?: boolean;
+      render: (params: { x?: number; y?: number; w?: number; h?: number }) => React.ReactNode;
+    };
   }
 
   interface ReactGridLayoutProps extends CoreProps {
