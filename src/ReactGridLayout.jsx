@@ -79,6 +79,7 @@ export default class ReactGridLayout extends React.Component {
     onResizeStop: noop,
     onDrop: noop,
     onDropDragOver: noop,
+    tooltip: null,
   };
 
   state = {
@@ -97,6 +98,8 @@ export default class ReactGridLayout extends React.Component {
     oldResizeItem: null,
     droppingDOMNode: null,
     children: [],
+    draggingId: null,
+    resizingId: null,
   };
 
   dragEnterCounter = 0;
@@ -208,6 +211,7 @@ export default class ReactGridLayout extends React.Component {
     this.setState({
       oldDragItem: cloneLayoutItem(l),
       oldLayout: layout,
+      draggingId: i,
     });
 
     return this.props.onDragStart(layout, l, l, null, e, node);
@@ -304,6 +308,7 @@ export default class ReactGridLayout extends React.Component {
       layout: layout1,
       oldDragItem: null,
       oldLayout: null,
+      draggingId: null,
     });
 
     this.onLayoutMaybeChanged(layout1, oldLayout);
@@ -325,7 +330,7 @@ export default class ReactGridLayout extends React.Component {
     this.setState({
       oldResizeItem: cloneLayoutItem(l),
       oldLayout: this.state.layout,
-      tooltip: i,
+      resizingId: i,
     });
 
     this.props.onResizeStart(layout, l, l, null, e, node);
@@ -415,10 +420,8 @@ export default class ReactGridLayout extends React.Component {
       layout: newLayout,
       oldResizeItem: null,
       oldLayout: null,
-      tooltip: null,
+      resizingId: null,
     });
-
-    console.log("x");
 
     this.onLayoutMaybeChanged(newLayout, oldLayout);
   };
@@ -483,8 +486,9 @@ export default class ReactGridLayout extends React.Component {
       draggableHandle,
       resizeHandles,
       resizeHandle,
+      tooltip,
     } = this.props;
-    const { mounted, droppingPosition } = this.state;
+    const { mounted, droppingPosition, draggingId, resizingId } = this.state;
 
     // Determine user manipulations possible.
     // If an item is static, it can't be manipulated by default.
@@ -531,26 +535,11 @@ export default class ReactGridLayout extends React.Component {
         droppingPosition={isDroppingItem ? droppingPosition : undefined}
         resizeHandles={resizeHandlesOptions}
         resizeHandle={resizeHandle}
+        tooltip={tooltip}
+        draggingId={draggingId}
+        resizingId={resizingId}
       >
-        <div
-          onMouseEnter={() => {
-            console.log("first");
-          }}
-          onMouseLeave={() => {
-            console.log("dsads");
-          }}
-        >
-          {child}
-          {this.state.tooltip === l.i && (
-            <div style={{ position: "absolute", right: 0, bottom: 0 }}>
-              <div
-                style={{ position: "absolute", left: 20, bottom: 100, backgroundColor: "red", whiteSpace: "nowrap" }}
-              >
-                {l.w} x {l.h}
-              </div>
-            </div>
-          )}
-        </div>
+        {child}
       </GridItem>
     );
   }

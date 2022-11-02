@@ -109,6 +109,7 @@ export default class GridItem extends React.Component {
     resizing: null,
     dragging: null,
     className: "",
+    isHovering: false,
   };
 
   elementRef = React.createRef();
@@ -118,6 +119,7 @@ export default class GridItem extends React.Component {
     // use this optimization.
     if (this.props.children !== nextProps.children) return true;
     if (this.props.droppingPosition !== nextProps.droppingPosition) return true;
+
     // TODO memoize these calculations so they don't take so long?
     const oldPosition = calcGridItemPosition(
       this.getPositionParams(this.props),
@@ -135,7 +137,14 @@ export default class GridItem extends React.Component {
       nextProps.h,
       nextState
     );
-    return !fastPositionEqual(oldPosition, newPosition) || this.props.useCSSTransforms !== nextProps.useCSSTransforms;
+
+    return (
+      !fastPositionEqual(oldPosition, newPosition) ||
+      this.props.useCSSTransforms !== nextProps.useCSSTransforms ||
+      this.state.isHovering !== nextState.isHovering ||
+      this.props.draggingId !== nextProps.draggingId ||
+      this.props.resizingId !== nextProps.resizingId
+    );
   }
 
   componentDidMount() {
@@ -395,21 +404,21 @@ export default class GridItem extends React.Component {
   };
 
   /**
-   * onResizeStop event handler
-   * @param  {Event}  e             event data
-   * @param  {Object} callbackData  an object with node and size information
-   */
-  onResizeStop = (e, callbackData) => {
-    this.onResizeHandler(e, callbackData, "onResizeStop");
-  };
-
-  /**
    * onResizeStart event handler
    * @param  {Event}  e             event data
    * @param  {Object} callbackData  an object with node and size information
    */
   onResizeStart = (e, callbackData) => {
     this.onResizeHandler(e, callbackData, "onResizeStart");
+  };
+
+  /**
+   * onResizeStop event handler
+   * @param  {Event}  e             event data
+   * @param  {Object} callbackData  an object with node and size information
+   */
+  onResizeStop = (e, callbackData) => {
+    this.onResizeHandler(e, callbackData, "onResizeStop");
   };
 
   /**
@@ -454,10 +463,55 @@ export default class GridItem extends React.Component {
   }
 
   render() {
-    const { x, y, w, h, isDraggable, isResizable, droppingPosition, useCSSTransforms } = this.props;
+    const {
+      i,
+      x,
+      y,
+      w,
+      h,
+      isDraggable,
+      isResizable,
+      droppingPosition,
+      useCSSTransforms,
+      tooltip,
+      draggingId,
+      resizingId,
+    } = this.props;
+
+    const { isHovering } = this.state;
+
+    const showTooltip = tooltip && ((isHovering && tooltip.showOnHover) || draggingId === i || resizingId === i);
 
     const pos = calcGridItemPosition(this.getPositionParams(), x, y, w, h, this.state);
-    const child = React.Children.only(this.props.children);
+    const child = (
+      <div style={{ position: "relative" }}>
+        {tooltip && (
+          <div
+            style={{
+              position: "absolute",
+              right: 0,
+              top: 0,
+              height: "100%",
+              opacity: showTooltip ? 1 : 0,
+              transition: "opacity 0.3s ease",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                right: 10,
+                whiteSpace: "nowrap",
+                transform: "translateY(-50%)",
+                top: "50%",
+              }}
+            >
+              {tooltip.render({ x, y, w, h })}
+            </div>
+          </div>
+        )}
+        {React.Children.only(this.props.children)}
+      </div>
+    );
 
     // Create the child element. We clone the existing element but modify its className and style.
     let newChild = React.cloneElement(child, {
@@ -475,7 +529,14 @@ export default class GridItem extends React.Component {
         ...this.props.style,
         ...child.props.style,
         ...this.createStyle(pos),
+        // zIndex: showTooltip ? 999 : undefined,
       },
+      onMouseEnter: tooltip
+        ? () => {
+            !draggingId && !resizingId && this.setState({ isHovering: true });
+          }
+        : undefined,
+      onMouseLeave: tooltip ? () => this.setState({ isHovering: false }) : undefined,
     });
 
     // Resizable support. This is usually on but the user can toggle it off.

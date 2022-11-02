@@ -58,6 +58,14 @@ const App = () => {
       compactType="vertical"
       maxRows={maxRows}
       resizeHandles={["nw", "ne", "se", "sw"]}
+      tooltip={{
+        showOnHover: true,
+        render: ({ w, h }: any) => (
+          <div style={{ background: "#b0bec577", fontSize: 12, padding: "2px 4px", borderRadius: 4 }}>
+            {w} x {h}
+          </div>
+        ),
+      }}
     >
       {data.map(({ i }: any) => {
         return (
