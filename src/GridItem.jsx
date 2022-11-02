@@ -484,33 +484,11 @@ export default class GridItem extends React.Component {
 
     const pos = calcGridItemPosition(this.getPositionParams(), x, y, w, h, this.state);
 
-    const toTheRight = pos?.width < 120;
-
     const child = (
       <div style={{ position: "relative" }}>
         {tooltip && (
-          <div
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              height: "100%",
-              opacity: showTooltip ? 1 : 0,
-              transition: "opacity 0.3s ease",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                right: toTheRight ? undefined : 10,
-                left: toTheRight ? 10 : undefined,
-                whiteSpace: "nowrap",
-                transform: "translateY(-50%)",
-                top: "50%",
-              }}
-            >
-              {tooltip.render({ x, y, w, h })}
-            </div>
+          <div className="react-grid-layout-tooltip" style={{ opacity: showTooltip ? 1 : 0 }}>
+            {tooltip.render({ x, y, w, h })}
           </div>
         )}
         {React.Children.only(this.props.children)}

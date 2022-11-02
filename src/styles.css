@@ -119,3 +119,10 @@ body {
   bottom: 0;
   transform: rotate(45deg);
 }
+.react-grid-layout-tooltip {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
