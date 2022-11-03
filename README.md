@@ -7,6 +7,7 @@ Add some new features
 - Add vertical bound: cannot resize, drag drop if has an element overflow the maxRows
 - Add tooltip while resizing, dragging, hovering an element
 - Add resize to the left
+- Swap element when drag drop if has enough space
 
 # Install
 

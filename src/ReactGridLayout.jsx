@@ -15,6 +15,7 @@ import {
   noop,
   synchronizeLayoutWithChildren,
   withLayoutItem,
+  overlaps,
 } from "./utils";
 
 import { calcXY } from "./calculateUtils";
@@ -249,6 +250,20 @@ export default class ReactGridLayout extends React.Component {
 
     // Move the element to the dragged location.
     const isUserAction = true;
+
+    const firstCollidedIndex = layout.findIndex((l1) => overlaps(l1, { ...l, x, y }));
+
+    if (firstCollidedIndex !== -1) {
+      const thisIndex = layout.findIndex((i1) => i1.i === i);
+      const tmp = layout[firstCollidedIndex].x;
+      const tmp2 = layout[firstCollidedIndex].y;
+      layout[firstCollidedIndex].x = layout[thisIndex].x;
+      layout[firstCollidedIndex].y = layout[thisIndex].y;
+      layout[thisIndex].x = tmp;
+      layout[thisIndex].y = tmp2;
+      x = tmp;
+      y = tmp2;
+    }
 
     layout = moveElement(layout, l, x, y, isUserAction, preventCollision, compactType(this.props), cols, allowOverlap);
 

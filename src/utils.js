@@ -115,6 +115,28 @@ export function collides(l1, l2) {
 }
 
 /**
+ * Given two layoutitems, check if they overlap.
+ */
+export function overlaps(l1, l2) {
+  if (l1.i === l2.i) return 0;
+
+  let area1 = l1.w * l1.h;
+  let area2 = l2.w * l2.h;
+
+  let xDist = Math.min(l1.x + l1.w, l2.x + l2.w) - Math.max(l1.x, l2.x);
+  let yDist = Math.min(l1.y + l1.h, l2.y + l2.h) - Math.max(l1.y, l2.y);
+
+  let areaI = 0;
+  if (xDist > 0 && yDist > 0) {
+    areaI = xDist * yDist;
+  }
+
+  const area = Math.min(area1, area2);
+
+  return areaI / area > 0.6; // diện tích giao nhau hơn 60% là giao nhau
+}
+
+/**
  * Given a layout, compact it. This involves going down each y coordinate and removing gaps
  * between items.
  *
