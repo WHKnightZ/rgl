@@ -113,6 +113,8 @@ export default class GridItem extends React.Component {
   };
 
   oldSize = null;
+  oldX = null;
+  oldY = null;
 
   elementRef = React.createRef();
 
@@ -289,7 +291,7 @@ export default class GridItem extends React.Component {
         width={position.width}
         height={position.height}
         minConstraints={minConstraints}
-        maxConstraints={maxConstraints}
+        // maxConstraints={maxConstraints}
         onResizeStop={this.onResizeStop}
         onResizeStart={this.onResizeStart}
         onResize={this.onResize}
@@ -447,20 +449,35 @@ export default class GridItem extends React.Component {
   onResizeHandler(e, { node, size, handle }, handlerName) {
     const handler = this.props[handlerName];
     if (!handler) return;
-    const { cols, x, y, i, maxH, minH } = this.props;
+    const { cols, x, y, i, maxH, minH, w: oldW, h: oldH } = this.props;
+
+    const updateLeft = handle.includes("w");
+    const updateTop = handle.includes("n");
+
     let { minW, maxW } = this.props;
 
-    size.left = handle.includes("w") ? this.oldSize.width - size.width : 0;
-    size.top = handle.includes("n") ? this.oldSize.height - size.height : 0;
+    size.left = updateLeft ? this.oldSize.width - size.width : 0;
+    size.top = updateTop ? this.oldSize.height - size.height : 0;
 
     // Get new XY
-    let { w, h, newX, newY } = calcWH(this.getPositionParams(), size.width, size.height, x, y, size.left, size.top);
+    let { w, h, newX, newY } = calcWH(this.getPositionParams(), size.width, size.height, x, y, oldW, oldH);
+
+    if (updateLeft) {
+      if (x !== this.oldX) this.oldSize.width = size.width;
+    } else newX = x;
+
+    if (updateTop) {
+      if (y !== this.oldY) this.oldSize.height = size.height;
+    } else newY = y;
+
+    this.oldX = x;
+    this.oldY = y;
 
     // minW should be at least 1 (TODO propTypes validation?)
     minW = Math.max(minW, 1);
 
-    // maxW should be at most (cols - x)
-    maxW = Math.min(maxW, cols - x);
+    // maxW should be at most (cols - newX)
+    maxW = Math.min(maxW, cols - newX);
 
     // Min/max capping
     w = clamp(w, minW, maxW);
