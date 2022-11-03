@@ -336,7 +336,7 @@ export default class ReactGridLayout extends React.Component {
     this.props.onResizeStart(layout, l, l, null, e, node);
   };
 
-  onResize = (i, w, h, { e, node }) => {
+  onResize = (i, w, h, { e, node, x, y }) => {
     const { layout, oldResizeItem } = this.state;
     const { cols, preventCollision, allowOverlap } = this.props;
 
@@ -345,7 +345,7 @@ export default class ReactGridLayout extends React.Component {
       // to find collisions faster
       let hasCollisions;
       if (preventCollision && !allowOverlap) {
-        const collisions = getAllCollisions(layout, { ...l, w, h }).filter((layoutItem) => layoutItem.i !== l.i);
+        const collisions = getAllCollisions(layout, { ...l, w, h, x, y }).filter((layoutItem) => layoutItem.i !== l.i);
         hasCollisions = collisions.length > 0;
 
         // If we're colliding, we need adjust the placeholder.
@@ -367,6 +367,8 @@ export default class ReactGridLayout extends React.Component {
         // Set new width and height.
         l.w = w;
         l.h = h;
+        l.x = x;
+        l.y = y;
       }
 
       return l;

@@ -92,7 +92,7 @@ export function calcXY(positionParams, top, left, w, h) {
  * @param  {Number} y                       Y coordinate in grid units.
  * @return {Object}                         w, h as grid units.
  */
-export function calcWH(positionParams, width, height, x, y) {
+export function calcWH(positionParams, width, height, x, y, oldW, oldH) {
   const { margin, maxRows, cols, rowHeight } = positionParams;
   const colWidth = calcGridColWidth(positionParams);
 
@@ -102,10 +102,14 @@ export function calcWH(positionParams, width, height, x, y) {
   let w = Math.round((width + margin[0]) / (colWidth + margin[0]));
   let h = Math.round((height + margin[1]) / (rowHeight + margin[1]));
 
+  const newX = x + oldW - w;
+  const newY = y + oldH - h;
+
   // Capping
-  w = clamp(w, 0, cols - x);
-  h = clamp(h, 0, maxRows - y);
-  return { w, h };
+  w = clamp(w, 0, cols - newX);
+  h = clamp(h, 0, maxRows - newY);
+
+  return { w, h, newX, newY };
 }
 
 // Similar to _.clamp
