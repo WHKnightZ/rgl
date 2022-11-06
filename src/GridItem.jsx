@@ -112,10 +112,6 @@ export default class GridItem extends React.Component {
     isHovering: false,
   };
 
-  oldSize = null;
-  oldX = null;
-  oldY = null;
-
   elementRef = React.createRef();
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -416,7 +412,6 @@ export default class GridItem extends React.Component {
    * @param  {Object} callbackData  an object with node and size information
    */
   onResizeStart = (e, callbackData) => {
-    this.oldSize = callbackData.size;
     this.onResizeHandler(e, callbackData, "onResizeStart");
   };
 
@@ -450,28 +445,18 @@ export default class GridItem extends React.Component {
     const handler = this.props[handlerName];
     if (!handler) return;
     const { cols, x, y, i, maxH, minH, w: oldW, h: oldH } = this.props;
+    const positionParams = this.getPositionParams();
 
     const updateLeft = handle.includes("w");
     const updateTop = handle.includes("n");
 
     let { minW, maxW } = this.props;
 
-    size.left = updateLeft ? this.oldSize.width - size.width : 0;
-    size.top = updateTop ? this.oldSize.height - size.height : 0;
-
     // Get new XY
-    let { w, h, newX, newY } = calcWH(this.getPositionParams(), size.width, size.height, x, y, oldW, oldH);
+    let { w, h, newX, newY } = calcWH(positionParams, size.width, size.height, x, y, oldW, oldH);
 
-    if (updateLeft) {
-      if (x !== this.oldX) this.oldSize.width = size.width;
-    } else newX = x;
-
-    if (updateTop) {
-      if (y !== this.oldY) this.oldSize.height = size.height;
-    } else newY = y;
-
-    this.oldX = x;
-    this.oldY = y;
+    if (!updateLeft) newX = x;
+    if (!updateTop) newY = y;
 
     // minW should be at least 1 (TODO propTypes validation?)
     minW = Math.max(minW, 1);
@@ -483,9 +468,24 @@ export default class GridItem extends React.Component {
     w = clamp(w, minW, maxW);
     h = clamp(h, minH, maxH);
 
-    this.setState({ resizing: handlerName === "onResizeStop" ? null : size });
+    const { w: newW, h: newH } = handler.call(this, i, w, h, { e, node, size, x: newX, y: newY }) || {};
 
-    handler.call(this, i, w, h, { e, node, size, x: newX, y: newY });
+    const { margin, rowHeight } = positionParams;
+    const colWidth = calcGridColWidth(positionParams);
+
+    let width2 = 0;
+    let height2 = 0;
+
+    if (updateLeft) {
+      width2 = calcGridItemWHPx(newW, colWidth, margin[0]);
+      size.left = width2 ? width2 - size.width : 0;
+    }
+    if (updateTop) {
+      height2 = calcGridItemWHPx(newH, rowHeight, margin[1]);
+      size.top = height2 ? height2 - size.height : 0;
+    }
+
+    this.setState({ resizing: handlerName === "onResizeStop" ? null : size });
   }
 
   render() {

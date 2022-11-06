@@ -420,6 +420,8 @@ export default class ReactGridLayout extends React.Component {
       layout: allowOverlap ? newLayout : layout2,
       activeDrag: placeholder,
     });
+
+    return placeholder;
   };
 
   onResizeStop = (i, w, h, { e, node }) => {
