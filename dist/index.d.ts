@@ -193,12 +193,6 @@ declare namespace ReactGridLayout {
     isBounded?: boolean | undefined;
 
     /**
-     * Uses CSS3 `translate()` instead of position top/left.
-     * This makes about 6x faster paint performance.
-     */
-    useCSSTransforms?: boolean | undefined;
-
-    /**
      * If parent DOM node of ResponsiveReactGridLayout or ReactGridLayout has "transform: scale(n)" css property,
      * we should set scale coefficient to avoid render artefacts while dragging.
      */
