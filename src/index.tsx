@@ -18,8 +18,8 @@ const ReactGridLayout = WidthProvider(GridLayout);
 // }));
 
 const data = [
-  { i: "1", x: 0, y: 0, w: 12, h: 30 },
-  { i: "2", x: 12, y: 0, w: 12, h: 30 },
+  { i: "1", x: 0, y: 0, w: 8, h: 30 },
+  { i: "2", x: 8, y: 0, w: 16, h: 30 },
   { i: "3", x: 0, y: 25, w: 24, h: 30 },
 ];
 

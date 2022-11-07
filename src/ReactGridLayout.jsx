@@ -106,6 +106,7 @@ export default class ReactGridLayout extends React.Component {
   dragEnterCounter = 0;
   oldResizePlaceholder = null;
   oldLayout = null;
+  oldSwapId = null;
 
   componentDidMount() {
     this.setState({ mounted: true });
@@ -249,21 +250,36 @@ export default class ReactGridLayout extends React.Component {
     };
 
     // Move the element to the dragged location.
-    const isUserAction = true;
+    const isUserAction = false;
 
     const firstCollidedIndex = layout.findIndex((l1) => overlaps(l1, { ...l, x, y }));
 
-    if (firstCollidedIndex !== -1) {
+    if (firstCollidedIndex !== -1 && layout[firstCollidedIndex].i !== this.oldSwapId) {
       const thisIndex = layout.findIndex((i1) => i1.i === i);
-      const tmp = layout[firstCollidedIndex].x;
-      const tmp2 = layout[firstCollidedIndex].y;
-      layout[firstCollidedIndex].x = layout[thisIndex].x;
-      layout[firstCollidedIndex].y = layout[thisIndex].y;
-      layout[thisIndex].x = tmp;
-      layout[thisIndex].y = tmp2;
-      x = tmp;
-      y = tmp2;
+      if (
+        layout[firstCollidedIndex].y === layout[thisIndex].y &&
+        layout[firstCollidedIndex].h === layout[thisIndex].h
+      ) {
+        if (layout[thisIndex].x + layout[thisIndex].w === layout[firstCollidedIndex].x) {
+          const tmp = layout[thisIndex].x;
+          x = layout[thisIndex].x = tmp + layout[firstCollidedIndex].w;
+          layout[firstCollidedIndex].x = tmp;
+        } else if (layout[firstCollidedIndex].x + layout[firstCollidedIndex].w === layout[thisIndex].x) {
+          const tmp = layout[firstCollidedIndex].x;
+          layout[firstCollidedIndex].x = tmp + layout[thisIndex].w;
+          x = layout[thisIndex].x = tmp;
+        }
+      } else {
+        const tmp = layout[firstCollidedIndex].x;
+        const tmp2 = layout[firstCollidedIndex].y;
+        layout[firstCollidedIndex].x = layout[thisIndex].x;
+        layout[firstCollidedIndex].y = layout[thisIndex].y;
+        x = layout[thisIndex].x = tmp;
+        y = layout[thisIndex].y = tmp2;
+      }
     }
+
+    this.oldSwapId = firstCollidedIndex !== -1 ? layout[firstCollidedIndex].i : null;
 
     layout = moveElement(layout, l, x, y, isUserAction, preventCollision, compactType(this.props), cols, allowOverlap);
 
