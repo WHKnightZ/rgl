@@ -92,7 +92,7 @@ export function calcXY(positionParams, top, left, w, h) {
  * @param  {Number} y                       Y coordinate in grid units.
  * @return {Object}                         w, h as grid units.
  */
-export function calcWH(positionParams, width, height, x, y, oldW, oldH) {
+export function calcWH(positionParams, width, height, x, y, oldW, oldH, updateLeft, updateTop) {
   const { margin, maxRows, cols, rowHeight } = positionParams;
   const colWidth = calcGridColWidth(positionParams);
 
@@ -102,8 +102,18 @@ export function calcWH(positionParams, width, height, x, y, oldW, oldH) {
   let w = Math.round((width + margin[0]) / (colWidth + margin[0]));
   let h = Math.round((height + margin[1]) / (rowHeight + margin[1]));
 
-  const newX = x + oldW - w;
-  const newY = y + oldH - h;
+  let newX = x + oldW - w;
+  let newY = y + oldH - h;
+
+  if (updateLeft && newX < 0) {
+    w = w + newX;
+    newX = 0;
+  }
+
+  if (updateTop && newY < 0) {
+    h = h + newY;
+    newY = 0;
+  }
 
   // Capping
   w = clamp(w, 0, cols - newX);

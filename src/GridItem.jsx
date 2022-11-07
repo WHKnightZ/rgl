@@ -453,7 +453,7 @@ export default class GridItem extends React.Component {
     let { minW, maxW } = this.props;
 
     // Get new XY
-    let { w, h, newX, newY } = calcWH(positionParams, size.width, size.height, x, y, oldW, oldH);
+    let { w, h, newX, newY } = calcWH(positionParams, size.width, size.height, x, y, oldW, oldH, updateLeft, updateTop);
 
     if (!updateLeft) newX = x;
     if (!updateTop) newY = y;
