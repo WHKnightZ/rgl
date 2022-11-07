@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { useEffect, useState } from "react";
 
 import GridLayout from "./ReactGridLayout";
@@ -9,13 +9,19 @@ import "./styles.css";
 
 const ReactGridLayout = WidthProvider(GridLayout);
 
-const data = Array.from({ length: 12 }).map((_, index) => ({
-  i: "" + index,
-  x: (index % 4) * 6,
-  y: Math.floor(index / 4) * 20,
-  w: 6,
-  h: 20,
-}));
+// const data = Array.from({ length: 12 }).map((_, index) => ({
+//   i: "" + index,
+//   x: (index % 4) * 6,
+//   y: Math.floor(index / 4) * 20,
+//   w: 6,
+//   h: 20,
+// }));
+
+const data = [
+  { i: "1", x: 0, y: 0, w: 12, h: 30 },
+  { i: "2", x: 12, y: 0, w: 12, h: 30 },
+  { i: "3", x: 0, y: 25, w: 24, h: 30 },
+];
 
 const margin = 7;
 const maxCols = 24;
@@ -67,4 +73,6 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const container: any = document.getElementById("root");
+const root = createRoot(container);
+root.render(<App />);

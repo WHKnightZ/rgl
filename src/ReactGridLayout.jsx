@@ -193,7 +193,7 @@ export default class ReactGridLayout extends React.Component {
 
     if (!maxRows) return true;
 
-    return layout.every(({ y, h }) => y + h <= maxRows);
+    return layout.every(({ x, y, w, h }) => y + h <= maxRows && x + w <= this.props.cols);
   };
 
   /**
