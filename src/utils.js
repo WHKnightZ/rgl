@@ -133,7 +133,7 @@ export function overlaps(l1, l2) {
 
   const area = Math.min(area1, area2);
 
-  return areaI / area > 0.6; // diện tích giao nhau hơn 60% là giao nhau
+  return areaI / area > 0.5; // diện tích giao nhau hơn 50% là giao nhau
 }
 
 /**
