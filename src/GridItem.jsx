@@ -121,22 +121,8 @@ export default class GridItem extends React.Component {
     if (this.props.droppingPosition !== nextProps.droppingPosition) return true;
 
     // TODO memoize these calculations so they don't take so long?
-    const oldPosition = calcGridItemPosition(
-      this.getPositionParams(this.props),
-      this.props.x,
-      this.props.y,
-      this.props.w,
-      this.props.h,
-      this.state
-    );
-    const newPosition = calcGridItemPosition(
-      this.getPositionParams(nextProps),
-      nextProps.x,
-      nextProps.y,
-      nextProps.w,
-      nextProps.h,
-      nextState
-    );
+    const oldPosition = calcGridItemPosition(this.getPositionParams(this.props), this.props.x, this.props.y, this.props.w, this.props.h, this.state);
+    const newPosition = calcGridItemPosition(this.getPositionParams(nextProps), nextProps.x, nextProps.y, nextProps.w, nextProps.h, nextState);
 
     return (
       !fastPositionEqual(oldPosition, newPosition) ||
@@ -170,9 +156,7 @@ export default class GridItem extends React.Component {
     };
     const { dragging } = this.state;
 
-    const shouldDrag =
-      (dragging && droppingPosition.left !== prevDroppingPosition.left) ||
-      droppingPosition.top !== prevDroppingPosition.top;
+    const shouldDrag = (dragging && droppingPosition.left !== prevDroppingPosition.left) || droppingPosition.top !== prevDroppingPosition.top;
 
     if (!dragging) {
       this.onDragStart(droppingPosition.e, {
@@ -489,20 +473,7 @@ export default class GridItem extends React.Component {
   }
 
   render() {
-    const {
-      i,
-      x,
-      y,
-      w,
-      h,
-      isDraggable,
-      isResizable,
-      droppingPosition,
-      useCSSTransforms,
-      tooltip,
-      draggingId,
-      resizingId,
-    } = this.props;
+    const { i, x, y, w, h, isDraggable, isResizable, droppingPosition, useCSSTransforms, tooltip, draggingId, resizingId } = this.props;
 
     const { isHovering } = this.state;
 
@@ -510,10 +481,18 @@ export default class GridItem extends React.Component {
 
     const pos = calcGridItemPosition(this.getPositionParams(), x, y, w, h, this.state);
 
+    let params = { left: 6 };
+    if (pos?.width < 80)
+      params = {
+        left: "unset",
+        right: -6,
+        transform: "translateX(100%)",
+      };
+
     const child = (
       <div style={{ position: "relative" }}>
         {tooltip && (
-          <div className="react-grid-layout-tooltip" style={{ opacity: showTooltip ? 1 : 0 }}>
+          <div className="react-grid-layout-tooltip" style={{ opacity: showTooltip ? 1 : 0, ...params }}>
             {tooltip.render({ x, y, w, h })}
           </div>
         )}
