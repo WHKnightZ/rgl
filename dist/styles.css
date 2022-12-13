@@ -122,8 +122,8 @@ body {
   transform: rotate(45deg);
 }
 .react-grid-layout-tooltip {
-  white-space: nowrap;
   position: absolute;
+  left: 6px;
   bottom: 6px;
   transition: opacity 0.3s ease;
   z-index: 1;
