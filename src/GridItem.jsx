@@ -476,17 +476,18 @@ export default class GridItem extends React.Component {
     const { i, x, y, w, h, isDraggable, isResizable, droppingPosition, useCSSTransforms, tooltip, draggingId, resizingId } = this.props;
 
     const { isHovering } = this.state;
+    const useHover = !draggingId && !resizingId;
 
-    const showTooltip = tooltip && ((isHovering && tooltip.showOnHover) || draggingId === i || resizingId === i);
+    const showTooltip = tooltip && ((useHover && isHovering && tooltip.showOnHover) || draggingId === i || resizingId === i);
 
     const pos = calcGridItemPosition(this.getPositionParams(), x, y, w, h, this.state);
 
-    let params = { left: 6 };
+    let params = { left: 6, bottom: 6 };
     if (pos?.width < 80)
       params = {
-        left: "unset",
-        right: -6,
-        transform: "translateX(100%)",
+        left: 2,
+        bottom: 2,
+        transform: "scale(0.7)",
       };
 
     const child = (
@@ -518,11 +519,7 @@ export default class GridItem extends React.Component {
         ...this.createStyle(pos),
         // zIndex: showTooltip ? 999 : undefined,
       },
-      onMouseEnter: tooltip
-        ? () => {
-            !draggingId && !resizingId && this.setState({ isHovering: true });
-          }
-        : undefined,
+      onMouseEnter: tooltip ? () => this.setState({ isHovering: true }) : undefined,
       onMouseLeave: tooltip ? () => this.setState({ isHovering: false }) : undefined,
     });
 
